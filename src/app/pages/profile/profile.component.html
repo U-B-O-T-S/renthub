@@ -1,0 +1,64 @@
+﻿<div class="profile-container">
+  <div class="profile-header-card">
+    <div class="profile-avatar-large">&#128100;</div>
+    <div class="profile-info">
+      <h2>{{ currentUser()?.name || 'Demo User' }}</h2>
+      <p>{{ currentUser()?.email || 'demo@renthub.com' }}</p>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <span>My Published Listings</span>
+    <span class="badge-count">{{ myListings().length }}</span>
+  </div>
+
+  <div class="listing-row" *ngIf="myListings().length > 0; else noListings">
+    <div class="compact-card" *ngFor="let apt of myListings()">
+      <img [src]="apt.photos && apt.photos.length > 0 ? apt.photos[0] : 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400'" [alt]="apt.title" class="card-img-thumb" />
+      <div class="card-details">
+        <div class="card-top">
+          <div>
+            <h4 class="card-title">{{ apt.title }}</h4>
+            <p class="card-subtext">&#128205; {{ apt.address }}</p>
+          </div>
+          <div class="card-price">&#8377;{{ apt.rent }} <span style="font-size:0.8rem; color:#64748b; font-weight:normal;">/ mo</span></div>
+        </div>
+        <div class="card-actions">
+          <a [routerLink]="['/details', apt.id]" class="btn-sm btn-view">View Details</a>
+          <a [routerLink]="['/edit-post', apt.id]" class="btn-sm btn-edit">Edit Post</a>
+          <button class="btn-sm btn-delete" (click)="deleteListing(apt.id)">Delete Post</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #noListings>
+    <div class="empty-block">You haven't posted any property listings yet.</div>
+  </ng-template>
+
+  <div class="section-title" style="margin-top: 3rem;">
+    <span>My Saved Favorites</span>
+    <span class="badge-count">{{ favoriteApartments().length }}</span>
+  </div>
+
+  <div class="listing-row" *ngIf="favoriteApartments().length > 0; else noFavorites">
+    <div class="compact-card" *ngFor="let apt of favoriteApartments()">
+      <img [src]="apt.photos && apt.photos.length > 0 ? apt.photos[0] : 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400'" [alt]="apt.title" class="card-img-thumb" />
+      <div class="card-details">
+        <div class="card-top">
+          <div>
+            <h4 class="card-title">{{ apt.title }}</h4>
+            <p class="card-subtext">&#128205; {{ apt.address }}</p>
+          </div>
+          <div class="card-price">&#8377;{{ apt.rent }} <span style="font-size:0.8rem; color:#64748b; font-weight:normal;">/ mo</span></div>
+        </div>
+        <div class="card-actions">
+          <a [routerLink]="['/details', apt.id]" class="btn-sm btn-view">View Details</a>
+          <button class="btn-sm btn-delete" (click)="removeFavorite(apt.id)">Remove Favorite</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #noFavorites>
+    <div class="empty-block">No saved properties. Browse listings and click the heart icon to save favorites.</div>
+  </ng-template>
+</div>
