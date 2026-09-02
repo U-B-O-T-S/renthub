@@ -9,15 +9,13 @@
 
 ## Test User Credentials
 
-Use these pre-configured credentials to test authenticated routes, listing creation, and profile management:
-
 | Email | Password | Role |
 | `demo@renthub.com` | `pass1234` | Registered Property Owner / User |
 
 
 ---
 
-## Features & Rubric Checklist
+## Features Checklist
 
 ### Core Features
 * **Auth Guards (`authGuard`):** Protects `/create-post`, `/edit-post/:id`, and `/profile`. Unauthenticated visitors are automatically routed to `/auth`.
@@ -31,7 +29,6 @@ Use these pre-configured credentials to test authenticated routes, listing creat
 2. **Interactive Comments & Inquiries:** Real-time post commenting mechanism per listing.
 3. **Interactive Multi-Photo Carousel:** Image preview gallery with next/previous controls and thumbnail view.
 4. **Favorites / Bookmarking System:** Real-time property favoriting accessible from cards, detail pages, and the user profile.
-5. **Contact Landlord Modal:** Direct inquiry popup dialog with instant feedback.
 
 ---
 
