@@ -1,0 +1,183 @@
+<div class="post-container">
+  <form *ngIf="!showPreview()" [formGroup]="postForm" (ngSubmit)="goToPreview()">
+    <h1 style="margin-top: 0;">{{ isEditMode() ? 'Edit Property Listing' : 'Post New Property' }}</h1>
+
+    <h2>Choose your Property Type</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Building Type *</label>
+        <select formControlName="buildingType">
+          <option value="">Select an option</option>
+          <option value="Apartment">Apartment</option>
+          <option value="Independent House">Independent House</option>
+          <option value="Studio">Studio</option>
+          <option value="Penthouse">Penthouse</option>
+        </select>
+        <span class="error-text" *ngIf="hasError('buildingType', 'required') && isTouched('buildingType')">
+          Please select a building type.
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>Property Name *</label>
+        <input type="text" formControlName="propertyName" placeholder="Enter property name" />
+        <span class="error-text" *ngIf="hasError('propertyName', 'required') && isTouched('propertyName')">
+          Property name is required.
+        </span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label><strong>Is this a shared property? *</strong></label>
+      <div>
+        <label><input type="radio" value="Yes" formControlName="isShared" /> Yes</label>
+        <label style="margin-left: 12px;"><input type="radio" value="No" formControlName="isShared" /> No</label>
+      </div>
+    </div>
+
+    <h2>Property Location</h2>
+    <div class="form-group">
+      <label>Street Address *</label>
+      <input type="text" formControlName="address" placeholder="Enter street address" />
+      <span class="error-text" *ngIf="hasError('address', 'required') && isTouched('address')">
+        Street address is required.
+      </span>
+    </div>
+
+    <h2>Property Details</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Square Feet *</label>
+        <input type="number" formControlName="squareFeet" placeholder="Enter square feet" />
+        <span class="error-text" *ngIf="hasError('squareFeet', 'required') && isTouched('squareFeet')">
+          Square feet is required.
+        </span>
+        <span class="error-text" *ngIf="hasError('squareFeet', 'min') && hasValue('squareFeet')">
+          Square feet must be at least 10.
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>Stay / Lease type *</label>
+        <div>
+          <label><input type="radio" value="long-term" formControlName="leaseType" /> Long term (6+ months)</label><br />
+          <label><input type="radio" value="short-term" formControlName="leaseType" /> Short term</label><br />
+          <label><input type="radio" value="both" formControlName="leaseType" /> Both</label>
+        </div>
+      </div>
+    </div>
+
+    <h2>Expected Rent</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Expected Rent ($) *</label>
+        <input type="number" formControlName="rent" placeholder="Enter expected rent" />
+        <span class="error-text" *ngIf="hasError('rent', 'required') && isTouched('rent')">
+          Expected rent is required.
+        </span>
+        <span class="error-text" *ngIf="hasError('rent', 'min') && hasValue('rent')">
+          Rent must be greater than 0.
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label><input type="checkbox" formControlName="isNegotiable" /> Negotiable</label>
+        <div style="margin-top: 6px;">
+          <label><input type="radio" value="per-month" formControlName="priceMode" /> Per Month</label><br />
+          <label><input type="radio" value="utilities-included" formControlName="priceMode" /> Utilities included in rent</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label><strong>Is the room/apartment furnished? *</strong></label>
+      <div>
+        <label><input type="radio" value="Yes" formControlName="isFurnished" /> Yes</label>
+        <label style="margin-left: 12px;"><input type="radio" value="No" formControlName="isFurnished" /> No</label>
+      </div>
+    </div>
+
+    <h2>Amenities included</h2>
+    <div class="checkbox-grid">
+      <label *ngFor="let item of amenitiesList">
+        <input type="checkbox" [value]="item" [checked]="isAmenitySelected(item)" (change)="onCheckboxChange($event)" /> {{ item }}
+      </label>
+    </div>
+
+    <h2>Description</h2>
+    <div class="form-group">
+      <label>Title *</label>
+      <input type="text" formControlName="title" placeholder="Enter your AD title" />
+      <span class="error-text" *ngIf="hasError('title', 'required') && isTouched('title')">
+        Title is required.
+      </span>
+      <span class="error-text" *ngIf="hasError('title', 'minlength') && hasValue('title')">
+        Title must be at least 5 characters (currently {{ getLength('title') }} / 5).
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label>Description *</label>
+      <textarea rows="4" formControlName="description" placeholder="Enter description within 1400 chars"></textarea>
+      <span class="error-text" *ngIf="hasError('description', 'required') && isTouched('description')">
+        Description is required.
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label>Photos (Image URLs, comma separated)</label>
+      <input type="text" formControlName="photos" />
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn" [disabled]="postForm.invalid">Proceed to Preview & Submit</button>
+      <span class="form-status-hint" *ngIf="postForm.invalid">
+        Please fill in all required fields marked with * to proceed.
+      </span>
+    </div>
+  </form>
+
+  <div *ngIf="showPreview()" class="preview-box">
+    <h1 style="text-align: center; margin-top: 0;">Preview and Submit</h1>
+    <div class="preview-grid">
+      <div class="preview-item">
+        <strong>Property Type</strong>
+        <div>{{ postForm.value.buildingType }}</div>
+      </div>
+      <div class="preview-item">
+        <strong>Property Name</strong>
+        <div>{{ postForm.value.propertyName }}</div>
+      </div>
+      <div class="preview-item">
+        <strong>Address</strong>
+        <div>{{ postForm.value.address }}</div>
+      </div>
+      <div class="preview-item">
+        <strong>Rent</strong>
+        <div>USD {{ postForm.value.rent }} / {{ postForm.value.priceMode }}</div>
+      </div>
+      <div class="preview-item" style="grid-column: span 2;">
+        <strong>Description</strong>
+        <div>{{ postForm.value.description }}</div>
+      </div>
+      <div class="preview-item" style="grid-column: span 2;">
+        <strong>Amenities</strong>
+        <div>{{ postForm.value.amenities?.join(', ') || 'None selected' }}</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 16px;">
+      <strong>Photos</strong>
+      <div class="preview-photos">
+        <img *ngFor="let photo of postForm.value.photos?.split(',')" [src]="photo.trim()" alt="Preview" />
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 12px; margin-top: 20px;">
+      <button class="btn" (click)="backToEdit()">Back to Edit</button>
+      <button class="btn" (click)="submitPost()" style="background: #222; color: #fff;">
+        {{ isEditMode() ? 'Save Changes' : 'Confirm & Submit' }}
+      </button>
+    </div>
+  </div>
+</div>
