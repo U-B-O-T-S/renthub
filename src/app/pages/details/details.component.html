@@ -1,0 +1,77 @@
+﻿<div class="details-container" *ngIf="apartment()">
+  <a routerLink="/home" class="back-link">&larr; Back to Listings</a>
+
+  <div class="carousel-container">
+    <img [src]="apartment().photos[activePhotoIndex()]" [alt]="apartment().title" class="carousel-image" />
+    <button class="carousel-btn prev" (click)="prevPhoto()" *ngIf="apartment().photos && apartment().photos.length > 1">&#10094;</button>
+    <button class="carousel-btn next" (click)="nextPhoto()" *ngIf="apartment().photos && apartment().photos.length > 1">&#10095;</button>
+    <div class="carousel-counter" *ngIf="apartment().photos">{{ activePhotoIndex() + 1 }} / {{ apartment().photos.length }}</div>
+  </div>
+
+  <div class="header-row">
+    <div>
+      <h1 style="margin:0 0 0.5rem 0; color:#0f172a;">{{ apartment().title }}</h1>
+      <p style="margin:0; color:#64748b;">&#128205; {{ apartment().address }}</p>
+    </div>
+    <div style="text-align: right;">
+      <div class="price-tag">&#8377;{{ apartment().rent }} <span style="font-size:1rem; color:#64748b; font-weight:normal;">/ mo</span></div>
+      <button class="fav-btn" (click)="toggleFavorite()" style="margin-top: 6px;">
+        {{ apartment().isFavorite ? '&#10084;&#65039; Saved' : '&#9825; Save' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="meta-grid">
+    <div class="meta-item">
+      <span class="meta-label">Property Type</span>
+      <span class="meta-value">{{ apartment().buildingType }}</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Area</span>
+      <span class="meta-value">{{ apartment().squareFeet }} sq.ft</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Lease Type</span>
+      <span class="meta-value" style="text-transform: capitalize;">{{ apartment().leaseType }}</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Furnishing</span>
+      <span class="meta-value">{{ apartment().isFurnished ? 'Furnished' : 'Unfurnished' }}</span>
+    </div>
+  </div>
+
+  <h3>Description</h3>
+  <p style="color: #334155; line-height: 1.6;">{{ apartment().description }}</p>
+
+  <h3>Amenities</h3>
+  <div class="amenities-list">
+    <span class="amenity-chip" *ngFor="let am of apartment().amenities">{{ am }}</span>
+  </div>
+
+  <div class="inquiry-card">
+    <h3>Interested in this property? Send an Inquiry</h3>
+    <textarea class="comment-box-input" rows="3" [(ngModel)]="inquiryMessage" placeholder="Ask about availability, schedule a viewing..."></textarea>
+    <div>
+      <button class="btn-action btn-inquiry" (click)="sendInquiry()">Send Direct Inquiry</button>
+      <span *ngIf="inquirySent()" class="success-badge">&#9989; Inquiry sent successfully to landlord!</span>
+    </div>
+  </div>
+
+  <div class="comments-section">
+    <h3>Public Comments & Questions</h3>
+    
+    <div *ngIf="apartment().comments && apartment().comments.length > 0">
+      <div class="comment-item" *ngFor="let c of apartment().comments">
+        <div class="comment-author">{{ c.userName || c.author || 'User' }}</div>
+        <p class="comment-text">{{ c.text }}</p>
+      </div>
+    </div>
+    <p *ngIf="!apartment().comments || apartment().comments.length === 0" style="color: #94a3b8;">No comments yet. Be the first to ask!</p>
+
+    <div style="margin-top: 1.5rem;">
+      <h4>Leave a Public Comment</h4>
+      <textarea class="comment-box-input" rows="3" [(ngModel)]="newCommentText" placeholder="Ask a question or discuss terms..."></textarea>
+      <button class="btn-action" (click)="submitComment()">Submit Comment</button>
+    </div>
+  </div>
+</div>
