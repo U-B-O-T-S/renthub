@@ -1,0 +1,79 @@
+﻿<div class="home-container">
+  <div class="hero-section">
+    <h1 class="hero-title">Find Your Next Home</h1>
+    <p class="hero-subtitle">Browse verified rental apartments, penthouses, and studios</p>
+  </div>
+
+  <div class="filter-panel">
+    <div class="filter-group">
+      <label class="filter-label">Search Location / Title</label>
+      <input
+        type="text"
+        class="form-input"
+        placeholder="e.g. Downtown, Studio, 2BHK..."
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label">Property Type</label>
+      <select
+        class="form-select"
+        [ngModel]="selectedType()"
+        (ngModelChange)="selectedType.set($event)"
+      >
+        <option value="all">All Types</option>
+        <option value="Apartment">Apartment</option>
+        <option value="Studio">Studio</option>
+        <option value="Penthouse">Penthouse</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label">Sort By</label>
+      <select
+        class="form-select"
+        [ngModel]="selectedSort()"
+        (ngModelChange)="selectedSort.set($event)"
+      >
+        <option value="default">Featured</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid-listings" *ngIf="filteredApartments().length > 0">
+    <div class="card" *ngFor="let apt of filteredApartments()">
+      <div class="card-thumb-container">
+        <img [src]="apt.photos && apt.photos.length > 0 ? apt.photos[0] : 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600'" [alt]="apt.title" class="card-thumb" />
+        <span class="card-badge">{{ apt.buildingType || 'Rental' }}</span>
+        <button class="card-fav-btn" (click)="toggleFavorite(apt.id, $event)">
+          {{ apt.isFavorite ? '&#10084;&#65039;' : '&#9825;' }}
+        </button>
+      </div>
+
+      <div class="card-body">
+        <h3 class="card-title">{{ apt.title }}</h3>
+        <p class="card-address">&#128205; {{ apt.address }}</p>
+
+        <div class="card-specs">
+          <span>&#128719;&#65039; {{ apt.bedrooms || 2 }} Beds</span>
+          <span>&#128705; {{ apt.bathrooms || 1 }} Baths</span>
+          <span>&#128208; {{ apt.squareFeet || 1000 }} sq.ft</span>
+        </div>
+
+        <div class="card-footer">
+          <div class="card-price">&#8377;{{ apt.rent }} <span style="font-size: 0.85rem; color: #64748b; font-weight: normal;">/ mo</span></div>
+          <a [routerLink]="['/details', apt.id]" class="view-btn">View Details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="filteredApartments().length === 0">
+    <h3>No matching properties found</h3>
+    <p>Try adjusting your search terms or filters.</p>
+  </div>
+</div>
